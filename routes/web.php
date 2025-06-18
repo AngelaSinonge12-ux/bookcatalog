@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // This line redirects the root URL to the 'books.index' named route
+    return redirect()->route('books.index');
 });
+
+// This line registers all the resourceful routes for your BookController,
+// including 'books.index', 'books.create', 'books.show', 'books.edit', 'books.update', 'books.destroy'.
+Route::resource('books', BookController::class);
