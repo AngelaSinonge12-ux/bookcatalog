@@ -1,58 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Catalog</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            margin-top: 20px;
-        }
-        .card {
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 8px;
-        }
-        .card-img-top {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-        .book-details {
-            font-size: 0.9em;
-            color: blue;
-        }
-        .btn-action {
-            margin-right: 5px;
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('books.index') }}">Book Catalog</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('books.create') }}">Add New Book</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+@extends('layouts.app')
 
-    <div class="container">
-        @yield('content')
+@section('content')
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Book Catalog</h1>
+        <a href="{{ route('books.create') }}" class="btn btn-primary">Add New Book</a>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIbDoctzRzX5xYm42vQxVw" crossorigin="anonymous"></script>
-</body>
-</html>
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    <div class="row">
+        @forelse ($books as $book)
+            <div class="col-md-4">
+                <div class="card">
+                    @if ($book->picture)
+                        {{-- Make sure your storage link is configured: php artisan storage:link --}}
+                        <img src="{{ asset('storage/' . $book->picture) }}" class="card-img-top" alt="{{ $book->title }}" style="height: 200px; object-fit: cover;">
+                    @else
+                        <img src="{{ asset('images/placeholder.png') }}" class="card-img-top" alt="No Image" style="height: 200px; object-fit: cover;">
+                    @endif
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $book->title }}</h5>
+                        <p class="card-text book-details"><strong>Author:</strong> {{ $book->author }}</p>
+                        <p class="card-text book-details"><strong>Year:</strong> {{ $book->year }}</p>
+                        <p class="card-text">{{ Str::limit($book->details, 100) }}</p>
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('books.show', $book->id) }}" class="btn btn-info btn-sm btn-action">View</a>
+                            <a href="{{ route('books.edit', $book->id) }}" class="btn btn-warning btn-sm btn-action">Edit</a>
+                            <form action="{{ route('books.destroy', $book->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm btn-action">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="col-12">
+                <p>No books found. Please add some!</p>
+            </div>
+        @endforelse
+    </div>
+@endsection
