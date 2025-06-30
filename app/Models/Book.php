@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Book extends Model
 {
     use HasFactory;
-    //new code
+    //Mass assignment of values or inputs (To prevent unauthorized inputs into the DB).
     protected $fillable = [
         'title',
         'author',

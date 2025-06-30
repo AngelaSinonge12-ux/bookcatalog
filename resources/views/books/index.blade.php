@@ -15,7 +15,6 @@
             <div class="col-md-4">
                 <div class="card">
                     @if ($book->picture)
-                        {{-- Make sure your storage link is configured: php artisan storage:link --}}
                         <img src="{{ asset('storage/' . $book->picture) }}" class="card-img-top" alt="{{ $book->title }}" style="height: 200px; object-fit: cover;">
                     @else
                         <img src="{{ asset('images/placeholder.png') }}" class="card-img-top" alt="No Image" style="height: 200px; object-fit: cover;">

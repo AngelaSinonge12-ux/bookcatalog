@@ -12,4 +12,5 @@ Database-driven book storage
 
 *Laravel
 *HTML and CSS
-\*MySQL
+*MySQL
+

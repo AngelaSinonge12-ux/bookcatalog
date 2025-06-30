@@ -4,6 +4,7 @@
     <h1>Edit Book</h1>
 
     <form action="{{ route('books.update', $book->id) }}" method="POST" enctype="multipart/form-data">
+       <!--Cross site request forgery,for security purpose (csrf)-->
         @csrf
         @method('PUT')
         <div class="mb-3">

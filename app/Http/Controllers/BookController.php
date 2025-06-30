@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers;//
 
-use App\Models\Book; // <--- IMPORTANT: Add this line
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage; // <--- IMPORTANT: Add this line
+use App\Models\Book; //
+use Illuminate\Http\Request;//
+use Illuminate\Support\Facades\Storage; //
 
 class BookController extends Controller
 {
@@ -36,7 +36,7 @@ class BookController extends Controller
             'author' => 'required|string|max:255',
             'year' => 'required|integer|min:1000|max:' . date('Y'),
             'details' => 'nullable|string',
-            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 
         ]);
    
         $bookData = $request->except('picture');
@@ -54,7 +54,7 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Book $book) // <--- Note the Book model type-hint
+    public function show(Book $book) 
     {
         return view('books.show', compact('book'));
     }
@@ -62,7 +62,7 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Book $book) // <--- Note the Book model type-hint
+    public function edit(Book $book) 
     {
         return view('books.edit', compact('book'));
     }
@@ -70,7 +70,7 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Book $book) // <--- Note the Book model type-hint
+    public function update(Request $request, Book $book) 
     {
         $request->validate([
             'title' => 'required|string|max:255',
@@ -99,7 +99,7 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book) // <--- Note the Book model type-hint
+    public function destroy(Book $book) 
     {
         if ($book->picture) {
             Storage::disk('public')->delete($book->picture);

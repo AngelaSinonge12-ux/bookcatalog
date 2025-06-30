@@ -15,10 +15,10 @@ use App\Http\Controllers\BookController;
 */
 
 Route::get('/', function () {
-    // This line redirects the root URL to the 'books.index' named route
+    //named route called 'books.index'
     return redirect()->route('books.index');
 });
 
-// This line registers all the resourceful routes for your BookController,
-// including 'books.index', 'books.create', 'books.show', 'books.edit', 'books.update', 'books.destroy'.
+
+//Registers  all  resourceful  routes for the book controller
 Route::resource('books', BookController::class);
