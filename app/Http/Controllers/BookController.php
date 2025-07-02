@@ -1,23 +1,34 @@
-<?php
+<?php 
 
-namespace App\Http\Controllers;//
+namespace App\Http\Controllers;
 
-use App\Models\Book; //
-use Illuminate\Http\Request;//
-use Illuminate\Support\Facades\Storage; //
+use App\Models\Book; 
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource (all books).
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::all();
-         
-        return view('books.index', compact('books'));
-    }
+        $query = Book::latest();
+        $search = ''; 
 
+        // search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search; 
+            $query->where('title', 'like', '%' . $search . '%')
+                  ->orWhere('author', 'like', '%' . $search . '%')
+                  ->orWhere('details', 'like', '%' . $search . '%'); 
+        }
+
+        $books = $query->paginate(10); 
+
+        
+        return view('books.index', compact('books', 'search'));
+    }
+     
     /**
      * Show the form for creating a new resource.
      */
@@ -31,30 +42,26 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+        
         $request->validate([
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
-            'year' => 'required|integer|min:1000|max:' . date('Y'),
-            'details' => 'nullable|string',
-            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 
+            'year' => 'required|integer|min:1000|max:' . date('Y'), 
+            'description' => 'nullable|string',
         ]);
-   
-        $bookData = $request->except('picture');
 
-        if ($request->hasFile('picture')) {
-            $path = $request->file('picture')->store('public/book_pictures');
-            $bookData['picture'] = str_replace('public/', '', $path);
-        }
+        
+        Book::create($request->all());
 
-        Book::create($bookData);
-
-        return redirect()->route('books.index')->with('success', 'Book added successfully!');
+        
+        return redirect()->route('books.index')
+                         ->with('success', 'Book created successfully.');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource (single book).
      */
-    public function show(Book $book) 
+    public function show(Book $book)
     {
         return view('books.show', compact('book'));
     }
@@ -62,7 +69,7 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Book $book) 
+    public function edit(Book $book)
     {
         return view('books.edit', compact('book'));
     }
@@ -70,42 +77,34 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Book $book) 
+    public function update(Request $request, Book $book)
     {
+        // Validate the incoming request data
         $request->validate([
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
             'year' => 'required|integer|min:1000|max:' . date('Y'),
             'details' => 'nullable|string',
-            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $bookData = $request->except('picture');
+        
+        $book->update($request->all());
 
-        if ($request->hasFile('picture')) {
-            // Delete old picture if exists
-            if ($book->picture) {
-                Storage::disk('public')->delete($book->picture);
-            }
-            $path = $request->file('picture')->store('public/book_pictures');
-            $bookData['picture'] = str_replace('public/', '', $path);
-        }
-
-        $book->update($bookData);
-
-        return redirect()->route('books.index')->with('success', 'Book updated successfully!');
+        
+        return redirect()->route('books.index')
+                         ->with('success', 'Book updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book) 
+    public function destroy(Book $book)
     {
-        if ($book->picture) {
-            Storage::disk('public')->delete($book->picture);
-        }
+        
         $book->delete();
 
-        return redirect()->route('books.index')->with('success', 'Book deleted successfully!');
+        
+        return redirect()->route('books.index')
+                         ->with('success', 'Book deleted successfully.');
     }
 }

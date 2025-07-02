@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Catalog</title>
+    <!--bootstrap icon-->
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+   
     <!--css link imported from bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
@@ -39,11 +42,13 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
+           
             <a class="navbar-brand" href="{{ route('books.index') }}">Book Catalogue</a>
+             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ route('books.create') }}">Add New Book➕</a>
+                       <!-- <a class=" text-white" href="{{ route('books.create') }}">Add New Book➕</a>-->
                     </li>
                 </ul>
             </div>
@@ -51,6 +56,9 @@
     </nav>
 
     <div class="container">
+       
+   <form action="{{ route('books.index') }}" method="GET" class="mb-4">
+    </form>
         @yield('content')
     </div>
      <!--JS link imported from bootstrap-->
